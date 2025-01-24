@@ -1,0 +1,251 @@
+Aqui está um guia completo sobre **OpenShift da Red Hat** para um treinamento abrangente. Este guia cobrirá desde a instalação até o gerenciamento e uso do OpenShift, passando por conceitos básicos, configuração, implantação de aplicativos e manutenção.
+
+---
+
+## **Guia Completo de OpenShift da Red Hat**
+
+### **Introdução ao OpenShift**
+
+O **OpenShift** é uma plataforma Kubernetes empresarial desenvolvida pela Red Hat. Ele permite a criação e o gerenciamento de clusters de containers, facilitando o desenvolvimento, implantação e gerenciamento de aplicativos nativos de nuvem com segurança e escalabilidade.
+
+### **1. Instalação do OpenShift**
+
+#### **1.1. Pré-requisitos**
+
+Antes de instalar o OpenShift, verifique se você atende aos seguintes pré-requisitos:
+
+- **Sistema operacional**: Red Hat Enterprise Linux (RHEL) 7 ou 8, Fedora ou CentOS.
+- **Ferramentas de container**: Docker, Podman ou CRI-O.
+- **Hardware**:
+  - 2 CPUs
+  - 8 GB de RAM
+  - 40 GB de espaço em disco
+  - Conectividade de rede estável
+
+#### **1.2. Métodos de Instalação**
+
+Existem várias maneiras de instalar o OpenShift, dependendo do seu ambiente e necessidades. Aqui estão os métodos mais comuns:
+
+##### **1.2.1. Instalação via Minishift (para ambientes locais)**
+
+O Minishift é uma maneira de rodar o OpenShift localmente em um ambiente de desenvolvimento.
+
+1. Instale o **Minishift** baixando o binário adequado para seu sistema operacional a partir do [site oficial](https://github.com/minishift/minishift/releases).
+   
+2. Após o download, mova o binário para um diretório no PATH:
+
+   ```bash
+   sudo mv minishift /usr/local/bin/
+   ```
+
+3. Inicie o OpenShift:
+
+   ```bash
+   minishift start
+   ```
+
+4. Verifique o status:
+
+   ```bash
+   minishift status
+   ```
+
+##### **1.2.2. Instalação em um Cluster com OpenShift Installer**
+
+Para ambientes de produção, use o instalador OpenShift para implantar clusters completos.
+
+1. Baixe o OpenShift Installer no [site oficial](https://try.openshift.com).
+   
+2. Configure as variáveis de ambiente para o provedor de infraestrutura (AWS, GCP, Azure, etc.).
+
+3. Execute o instalador interativo:
+
+   ```bash
+   ./openshift-install create cluster
+   ```
+
+4. Siga as instruções para configurar seu cluster.
+
+### **2. Configuração Inicial do OpenShift**
+
+Após a instalação, você pode acessar a interface web e o console de linha de comando do OpenShift para começar a configurar seu ambiente.
+
+#### **2.1. Acesso à Interface Web**
+
+1. Acesse a interface web do OpenShift através do navegador, usando o endereço fornecido durante a instalação.
+   
+2. Faça login com as credenciais do administrador (`kubeadmin`).
+
+#### **2.2. Configuração do OpenShift CLI (oc)**
+
+O OpenShift CLI, ou `oc`, é a ferramenta de linha de comando usada para interagir com o cluster OpenShift.
+
+1. Instale o `oc` baixando-o da página de login do OpenShift.
+
+2. Conecte-se ao cluster com o comando:
+
+   ```bash
+   oc login https://api.<cluster-url>:6443 --username=<admin-username>
+   ```
+
+### **3. Criação e Gerenciamento de Projetos**
+
+No OpenShift, os projetos são um espaço de nomes lógico que organiza recursos relacionados. Criar projetos é a primeira etapa para hospedar seus aplicativos.
+
+#### **3.1. Criando um Projeto**
+
+Para criar um novo projeto, use a interface web ou o `oc`:
+
+```bash
+oc new-project <nome-do-projeto>
+```
+
+#### **3.2. Listando Projetos**
+
+Para listar todos os projetos no cluster:
+
+```bash
+oc get projects
+```
+
+### **4. Implantação de Aplicações no OpenShift**
+
+OpenShift facilita a implantação de aplicativos através de containers. Ele utiliza `BuildConfig` e `DeploymentConfig` para gerenciar o ciclo de vida de um aplicativo.
+
+#### **4.1. Criando um Build a partir do Código-fonte**
+
+1. Use o comando `new-app` para criar e implantar um aplicativo a partir de um repositório Git:
+
+   ```bash
+   oc new-app https://github.com/<repositório>
+   ```
+
+2. O OpenShift criará automaticamente a build e a implantação.
+
+#### **4.2. Gerenciamento de Builds**
+
+Para listar as builds:
+
+```bash
+oc get builds
+```
+
+Para verificar o status de uma build:
+
+```bash
+oc logs build/<build-name>
+```
+
+#### **4.3. Deploy de Imagens Docker**
+
+Você pode implantar uma imagem Docker diretamente no OpenShift:
+
+```bash
+oc new-app <imagem-docker>
+```
+
+### **5. Gerenciamento de Pods e Recursos**
+
+OpenShift é baseado no Kubernetes, então gerenciar pods, serviços e outros recursos é similar.
+
+#### **5.1. Listando Pods**
+
+Para listar os pods no projeto atual:
+
+```bash
+oc get pods
+```
+
+#### **5.2. Escalando Aplicações**
+
+Para escalar um aplicativo para 3 réplicas:
+
+```bash
+oc scale --replicas=3 deployment/<app-name>
+```
+
+#### **5.3. Expondo Serviços**
+
+Após a implantação de um aplicativo, você pode expô-lo através de um serviço:
+
+```bash
+oc expose deployment <app-name> --port=8080 --name=<service-name>
+```
+
+### **6. Monitoramento e Logs**
+
+O OpenShift oferece ferramentas para monitoramento e logs de aplicações em execução.
+
+#### **6.1. Visualizando Logs de Aplicações**
+
+Para ver os logs de um pod específico:
+
+```bash
+oc logs pod/<nome-do-pod>
+```
+
+#### **6.2. Monitoramento via Interface Web**
+
+A interface web do OpenShift oferece painéis para monitoramento de CPU, memória, rede e armazenamento, além de mostrar eventos e problemas.
+
+### **7. Atualização e Manutenção do Cluster**
+
+#### **7.1. Atualizando o OpenShift**
+
+1. Baixe a nova versão do instalador do OpenShift.
+   
+2. Execute o comando para atualizar o cluster:
+
+   ```bash
+   ./openshift-install create cluster --dir=<cluster-dir>
+   ```
+
+#### **7.2. Backup do Cluster**
+
+É fundamental fazer backup dos dados do cluster, incluindo volumes persistentes e configurações. O OpenShift usa snapshots e ferramentas de backup baseadas em etcd.
+
+### **8. Segurança no OpenShift**
+
+#### **8.1. Criação de Usuários e Funções**
+
+Você pode criar usuários e definir suas permissões com base em funções:
+
+1. Crie um usuário:
+
+   ```bash
+   oc adm policy add-role-to-user <role> <username>
+   ```
+
+2. Atribua permissões ao projeto:
+
+   ```bash
+   oc adm policy add-role-to-user admin <username> -n <project-name>
+   ```
+
+#### **8.2. Configuração de TLS e Certificados**
+
+O OpenShift permite que você configure certificados SSL/TLS para proteger a comunicação dentro do cluster.
+
+### **9. Gerenciamento de Volumes Persistentes**
+
+Aplicações que precisam armazenar dados persistentes usam **Volumes Persistentes (PVs)** e **Claims de Volumes Persistentes (PVCs)**.
+
+#### **9.1. Criando um Volume Persistente**
+
+```bash
+oc create -f <pvc-config.yaml>
+```
+
+#### **9.2. Anexando um PVC a um Pod**
+
+Você pode anexar um PVC a um pod por meio de uma `DeploymentConfig`.
+
+```yaml
+volumeMounts:
+  - mountPath: "/data"
+    name: <volume-name>
+```
+
+### **10. Conclusão**
+
+Este guia oferece uma visão completa sobre como instalar, configurar e gerenciar aplicativos em um cluster OpenShift. Ele abrange desde conceitos básicos até a implementação de aplicativos e manutenção do cluster.
